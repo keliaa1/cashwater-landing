@@ -6,7 +6,7 @@ import './style.css';
 // Scene
 // ----------------------
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xf8fafc); // Match --bg-page
+scene.background = new THREE.Color(0xf8fafc); // Match --bg-color
 
 // ----------------------
 // Camera

@@ -5,7 +5,7 @@
   /* Cashwater's --text-main */
   --text-secondary: #64748b;
   /* Cashwater's --text-muted */
-  --accent-color: #62a9e3;
+  --accent-color: #396cb8;
   /* Cashwater brand blue */
   --font-main: 'Outfit', sans-serif;
 }
@@ -119,14 +119,14 @@ body {
   cursor: pointer;
   transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
   letter-spacing: 0.05em;
-  box-shadow: 0 4px 14px 0 rgba(98, 169, 227, 0.39);
+  box-shadow: 0 4px 14px 0 rgba(57, 108, 184, 0.39);
 }
 
 .btn-customize:hover {
   transform: translateY(-2px);
-  background-color: #4b8cc1;
-  /* Slightly darker shade */
-  box-shadow: 0 6px 20px rgba(98, 169, 227, 0.23);
+  background-color: #2d5592;
+  /* Slightly darker shade of #396cb8 */
+  box-shadow: 0 6px 20px rgba(57, 108, 184, 0.23);
 }
 
 .btn-customize span {
@@ -311,7 +311,7 @@ canvas {
 }
 
 .btn-card-link:hover {
-  color: #4b8cc1;
+  color: #2d5592;
 }
 
 .btn-read-more {
