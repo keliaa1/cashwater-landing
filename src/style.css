@@ -1,8 +1,12 @@
 :root {
-  --bg-color: #e6e6e2;
-  --text-primary: #000000;
-  --text-secondary: #555555;
+  --bg-color: #f8fafc;
+  /* Cashwater's --bg-page */
+  --text-primary: #1e293b;
+  /* Cashwater's --text-main */
+  --text-secondary: #64748b;
+  /* Cashwater's --text-muted */
   --accent-color: #62a9e3;
+  /* Cashwater brand blue */
   --font-main: 'Outfit', sans-serif;
 }
 
@@ -37,6 +41,7 @@ body {
   cursor: pointer;
   opacity: 0.7;
   transition: opacity 0.3s;
+  color: var(--text-primary);
 }
 
 .cart-icon:hover {
@@ -67,6 +72,7 @@ body {
   max-width: 650px;
   position: relative;
   z-index: 60;
+  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .main-title {
@@ -75,8 +81,12 @@ body {
   line-height: 0.85;
   letter-spacing: -0.04em;
   margin-bottom: 2rem;
-  color: #000;
+  color: var(--text-primary);
   text-transform: uppercase;
+}
+
+.main-title .highlight {
+  color: var(--accent-color);
 }
 
 .description {
@@ -99,7 +109,7 @@ body {
 .btn-customize {
   display: flex;
   align-items: center;
-  background-color: #000000;
+  background-color: var(--accent-color);
   color: #ffffff;
   border: none;
   padding: 0.5rem 1.5rem;
@@ -107,13 +117,16 @@ body {
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.2s, background-color 0.2s;
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
   letter-spacing: 0.05em;
+  box-shadow: 0 4px 14px 0 rgba(98, 169, 227, 0.39);
 }
 
 .btn-customize:hover {
   transform: translateY(-2px);
-  background-color: var(--accent-color);
+  background-color: #4b8cc1;
+  /* Slightly darker shade */
+  box-shadow: 0 6px 20px rgba(98, 169, 227, 0.23);
 }
 
 .btn-customize span {
@@ -121,7 +134,7 @@ body {
 }
 
 .btn-icon {
-  background-color: var(--accent-color);
+  background-color: #ffffff;
   width: 30px;
   height: 30px;
   display: flex;
@@ -132,10 +145,10 @@ body {
 }
 
 .btn-customize:hover .btn-icon {
-  background-color: #ffffff;
+  background-color: #e2e8f0;
 }
 
-.btn-customize:hover .btn-icon svg path {
+.btn-customize .btn-icon svg path {
   stroke: var(--accent-color);
 }
 
@@ -148,20 +161,20 @@ footer {
 }
 
 .btn-sandbox {
-  background-color: #000000;
-  color: #ffffff;
-  border: none;
+  background-color: #ffffff;
+  color: var(--text-primary);
+  border: 1px solid var(--text-secondary);
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
-  opacity: 0.9;
-  transition: opacity 0.3s;
+  transition: all 0.3s;
 }
 
 .btn-sandbox:hover {
-  opacity: 1;
+  background-color: var(--text-primary);
+  color: #ffffff;
 }
 
 canvas {
@@ -176,4 +189,161 @@ canvas {
 ::selection {
   background: var(--accent-color);
   color: white;
+}
+
+/* -------------------------------
+   Interactive AirPods-Style Shift 
+   ------------------------------- */
+
+.bg-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 25vw;
+  font-weight: 900;
+  color: rgba(0, 0, 0, 0.03);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.details-content {
+  position: absolute;
+  right: 3%;
+  top: 50%;
+  transform: translate(0, -45%);
+  text-align: left;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 60;
+  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 45%;
+  max-width: 850px;
+}
+
+.apple-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+}
+
+.manual-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
+}
+
+.manual-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 1.2rem;
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.manual-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  border-color: var(--accent-color);
+}
+
+.card-image {
+  width: 80px;
+  height: 80px;
+  background: var(--bg-color);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.manual-card:hover .card-image img {
+  transform: scale(1.1);
+}
+
+.card-info h3 {
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+  color: var(--text-primary);
+}
+
+.card-info p {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+}
+
+.btn-card-link {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btn-card-link:hover {
+  color: #4b8cc1;
+}
+
+.btn-read-more {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--text-secondary);
+  padding: 0.6rem 2rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-read-more:hover {
+  background-color: var(--text-primary);
+  color: #ffffff;
+}
+
+/* state styles */
+body.shifted .bg-text {
+  opacity: 1;
+}
+
+body.shifted .hero-content {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50px);
+}
+
+body.shifted .details-content {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, -50%);
 }

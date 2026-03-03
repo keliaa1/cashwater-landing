@@ -6,12 +6,12 @@ import './style.css';
 // Scene
 // ----------------------
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xe6e6e2);
+scene.background = new THREE.Color(0xf8fafc); // Match --bg-page
 
 // ----------------------
 // Camera
 // ----------------------
-const getCanvasWidth = () => window.innerWidth > 768 ? window.innerWidth * 0.55 : window.innerWidth;
+const getCanvasWidth = () => window.innerWidth;
 
 const camera = new THREE.PerspectiveCamera(
   60,
@@ -47,23 +47,49 @@ document.getElementById('app').appendChild(renderer.domElement);
 // ----------------------
 // Lighting
 // ----------------------
-scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+// Lower ambient to create more contrast for the directional lights
+scene.add(new THREE.AmbientLight(0xffffff, 0.3));
 
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0xe6e6e2, 0.8);
+// Soft top-down fill
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0xf8fafc, 0.6);
 hemiLight.position.set(0, 20, 0);
 scene.add(hemiLight);
 
-const keyLight = new THREE.DirectionalLight(0xffffff, 1.8);
+// Powerful Front Key Light (Directional)
+const keyLight = new THREE.DirectionalLight(0xffffff, 2.5); // Increased intensity
 keyLight.position.set(10, 10, 10);
 keyLight.castShadow = true;
 keyLight.shadow.mapSize.set(2048, 2048);
 scene.add(keyLight);
 
-const backLight = new THREE.DirectionalLight(0xffffff, 1.2);
+// Dramatic SpotLight for that "studio scene" feel
+const spotLight = new THREE.SpotLight(0xffffff, 80); // High intensity
+// Position it high and slightly to the right to hit the front face
+spotLight.position.set(-5, 8, 5);
+spotLight.angle = Math.PI / 6;
+spotLight.penumbra = 0.5; // Soft edges
+spotLight.decay = 2;
+spotLight.distance = 50;
+spotLight.castShadow = true;
+spotLight.shadow.mapSize.width = 1024;
+spotLight.shadow.mapSize.height = 1024;
+spotLight.shadow.bias = -0.0001;
+scene.add(spotLight);
+
+// The light needs a target to look at. We'll set it to look at the left side of the screen
+// where the model is roughly positioned.
+const targetObject = new THREE.Object3D();
+targetObject.position.set(-8.5, 0, 0);
+scene.add(targetObject);
+spotLight.target = targetObject;
+
+// Back Light to highlight edges and prevent flat shadowing
+const backLight = new THREE.DirectionalLight(0xffffff, 1.5);
 backLight.position.set(-10, 5, -5);
 scene.add(backLight);
 
-const fillLight = new THREE.DirectionalLight(0xffffff, 0.8);
+// Soft Side/Fill Light
+const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
 fillLight.position.set(-5, 2, 5);
 scene.add(fillLight);
 
@@ -74,7 +100,7 @@ const loader = new GLTFLoader();
 let customModel;
 
 loader.load(
-  '/cashwater.glb',
+  '/cashwater1.glb',
   (gltf) => {
     const model = gltf.scene;
 
@@ -96,10 +122,12 @@ loader.load(
     const center = box.getCenter(new THREE.Vector3());
     model.position.sub(center);
 
-    // Scale
-    pivot.scale.set(1.4, 1.4, 1.4);
+    // Initial Scale
+    pivot.scale.set(1.3, 1.3, 1.3);
 
     customModel = pivot;
+    customModel.position.x = targetX; // Start on the right
+    customModel.rotation.y = Math.PI; // Start from the front (interface face)
 
     console.log("Model loaded cleanly.");
   },
@@ -120,14 +148,51 @@ window.addEventListener('resize', () => {
 });
 
 // ----------------------
+// Interaction (Raycaster)
+// ----------------------
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let isShifted = false;
+let targetX = 3.5; // Start in hero position (further right)
+let targetScale = 1.3; // Smaller for hero state
+
+window.addEventListener('click', (event) => {
+  if (!customModel) return;
+
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObject(customModel, true);
+
+  if (intersects.length > 0) {
+    isShifted = !isShifted;
+    // When shifted, move the model further to the left (target: -8.5)
+    // so it doesn't fight for space with the description on the right
+    // Increase scale for manual view (target: 2.2)
+    targetX = isShifted ? -8.5 : 3.5;
+    targetScale = isShifted ? 2.2 : 1.3;
+    document.body.classList.toggle('shifted', isShifted);
+  }
+});
+
+// ----------------------
 // Animation Loop
 // ----------------------
 function animate() {
   requestAnimationFrame(animate);
 
-  // Rotate horizontally around Y axis
+  // Rotate horizontally around Y axis at a slower, premium speed
   if (customModel) {
-    customModel.rotation.y += 0.01; // <-- horizontal rotation
+    customModel.rotation.y += 0.005;
+
+    // Smoothly lerp position towards targetX
+    customModel.position.x += (targetX - customModel.position.x) * 0.06;
+
+    // Smoothly lerp scale towards targetScale
+    const s = customModel.scale.x + (targetScale - customModel.scale.x) * 0.06;
+    customModel.scale.set(s, s, s);
   }
 
   renderer.render(scene, camera);
