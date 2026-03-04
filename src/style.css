@@ -70,7 +70,8 @@ body {
   z-index: 50;
 }
 
-.hero-content {
+.hero-content,
+.details-content {
   pointer-events: auto;
   max-width: 650px;
   position: relative;

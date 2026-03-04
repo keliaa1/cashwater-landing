@@ -175,6 +175,42 @@ scrollHint.innerHTML = `<span>Scroll to explore</span><div class="arrow"></div>`
 document.body.appendChild(scrollHint);
 
 // ----------------------
+// Interactivity & State
+// ----------------------
+function toggleShift(forceState) {
+  if (!customModel) return;
+
+  // If forceState is provided, use it. Otherwise toggle.
+  const nextShifted = typeof forceState === "boolean" ? forceState : !isShifted;
+
+  // Don't do anything if we're already in that state
+  if (nextShifted === isShifted) return;
+
+  isShifted = nextShifted;
+
+  // Update target values for the animation loop
+  targetX = isShifted ? -8.5 : 3.5;
+  targetY = isShifted ? 1.5 : 0;
+  targetScale = isShifted ? 2.2 : 1.3;
+
+  // Toggle UI classes
+  document.body.classList.toggle("shifted", isShifted);
+
+  if (isShifted) {
+    // Enable scrolling and show hint
+    document.body.classList.add("scrollable");
+    scrollHint.classList.add("visible");
+    setTimeout(() => scrollHint.classList.remove("visible"), 4000);
+  } else {
+    // Disable scrolling, reset position, and hide hint
+    document.body.classList.remove("scrollable");
+    scrollHint.classList.remove("visible");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollProgress = 0;
+  }
+}
+
+// ----------------------
 // Interaction (Raycaster)
 // ----------------------
 const raycaster = new THREE.Raycaster();
@@ -186,6 +222,9 @@ let targetScale = 1.3; // Smaller for hero state
 let scrollProgress = 0; // 0 = top, 1 = fully scrolled
 
 window.addEventListener("click", (event) => {
+  // Prevent raycaster from triggering if we clicked a UI button
+  if (event.target.closest("button")) return;
+
   if (!customModel) return;
 
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -196,26 +235,21 @@ window.addEventListener("click", (event) => {
   const intersects = raycaster.intersectObject(customModel, true);
 
   if (intersects.length > 0) {
-    isShifted = !isShifted;
-    targetX = isShifted ? -8.5 : 3.5;
-    targetY = isShifted ? 1.5 : 0;
-    targetScale = isShifted ? 2.2 : 1.3;
-    document.body.classList.toggle("shifted", isShifted);
-
-    if (isShifted) {
-      // Enable scrolling
-      document.body.classList.add("scrollable");
-      scrollHint.classList.add("visible");
-      // Hide hint after a few seconds
-      setTimeout(() => scrollHint.classList.remove("visible"), 4000);
-    } else {
-      // Disable scrolling, reset to top
-      document.body.classList.remove("scrollable");
-      scrollHint.classList.remove("visible");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      scrollProgress = 0;
-    }
+    toggleShift();
   }
+});
+
+// ----------------------
+// Button Listeners
+// ----------------------
+document.getElementById("btn-shift")?.addEventListener("click", (e) => {
+  e.stopPropagation();
+  toggleShift(true); // Always go to details when clicking this
+});
+
+document.getElementById("btn-back")?.addEventListener("click", (e) => {
+  e.stopPropagation();
+  toggleShift(false); // Always go back to hero
 });
 
 // ----------------------
