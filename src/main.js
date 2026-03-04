@@ -225,14 +225,28 @@ window.addEventListener("scroll", () => {
   if (!isShifted) return;
   const maxScroll = window.innerHeight; // One viewport height of scroll
   scrollProgress = Math.min(window.scrollY / maxScroll, 1);
+});
 
-  // Reveal "Why Choose Us" cards with stagger as user scrolls past halfway
-  if (scrollProgress > 0.3) {
-    const cards = document.querySelectorAll(".why-card");
-    cards.forEach((card, i) => {
-      setTimeout(() => card.classList.add("visible"), i * 120);
+// ----------------------
+// Scroll Animations (Intersection Observer)
+// ----------------------
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        // Optional: unobserve after revealing
+        // revealObserver.unobserve(entry.target);
+      }
     });
-  }
+  },
+  {
+    threshold: 0.15, // Trigger when 15% of the element is visible
+  },
+);
+
+document.querySelectorAll(".reveal-on-scroll").forEach((el) => {
+  revealObserver.observe(el);
 });
 
 // ----------------------
