@@ -7,8 +7,8 @@
   /* Muted text for dark bg */
   --accent-color: #396cb8;
   /* Cashwater brand blue */
-  --accent-glow: #00ff88;
-  /* Green glow accent */
+  --accent-glow: #253b5f;
+  /* Navy blue accent */
   --font-main: "Outfit", sans-serif;
 }
 
@@ -44,7 +44,7 @@ body {
   opacity: 0.7;
   transition: opacity 0.3s;
   color: var(--text-primary);
-  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.3));
+  filter: drop-shadow(0 0 4px rgba(37, 59, 95, 0.4));
 }
 
 .cart-icon:hover {
@@ -184,7 +184,7 @@ footer {
 .btn-sandbox:hover {
   background-color: rgba(255, 255, 255, 0.15);
   color: #ffffff;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
+  box-shadow: 0 0 20px rgba(37, 59, 95, 0.3);
 }
 
 canvas {
@@ -274,7 +274,7 @@ canvas {
 
 .manual-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(0, 255, 136, 0.1);
+  box-shadow: 0 12px 30px rgba(37, 59, 95, 0.2);
   border-color: var(--accent-glow);
 }
 
@@ -344,7 +344,7 @@ canvas {
 .btn-read-more:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
+  box-shadow: 0 0 20px rgba(37, 59, 95, 0.3);
 }
 
 /* state styles */
@@ -429,9 +429,9 @@ body.scrollable .why-choose-section {
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.08em;
-  color: var(--accent-glow);
-  background: rgba(0, 255, 136, 0.08);
-  border: 1px solid rgba(0, 255, 136, 0.15);
+  color: #7ea8d4;
+  background: rgba(37, 59, 95, 0.15);
+  border: 1px solid rgba(37, 59, 95, 0.3);
   padding: 0.35rem 1rem;
   border-radius: 999px;
   margin-bottom: 1.2rem;
@@ -479,9 +479,9 @@ body.scrollable .why-choose-section {
 }
 
 .date-badge.active {
-  background: var(--accent-glow);
-  border-color: var(--accent-glow);
-  color: #080808;
+  background: #253b5f;
+  border-color: #253b5f;
+  color: #ffffff;
 }
 
 /* --- Zigzag Timeline --- */
@@ -501,8 +501,8 @@ body.scrollable .why-choose-section {
   height: 100%;
   background-image: repeating-linear-gradient(
     to bottom,
-    rgba(0, 255, 136, 0.3) 0,
-    rgba(0, 255, 136, 0.3) 8px,
+    rgba(37, 59, 95, 0.5) 0,
+    rgba(37, 59, 95, 0.5) 8px,
     transparent 8px,
     transparent 18px
   );
@@ -532,7 +532,7 @@ body.scrollable .why-choose-section {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--accent-glow);
+  background: #4a7ab5;
   border: 3px solid #080808;
   z-index: 2;
 }
@@ -546,8 +546,8 @@ body.scrollable .why-choose-section {
   width: 2.5rem;
   background-image: repeating-linear-gradient(
     to right,
-    rgba(0, 255, 136, 0.3) 0,
-    rgba(0, 255, 136, 0.3) 6px,
+    rgba(37, 59, 95, 0.5) 0,
+    rgba(37, 59, 95, 0.5) 6px,
     transparent 6px,
     transparent 12px
   );
@@ -597,8 +597,8 @@ body.scrollable .why-choose-section {
   transform: translateY(-4px);
   box-shadow:
     0 16px 40px rgba(0, 0, 0, 0.4),
-    0 0 30px rgba(0, 255, 136, 0.06);
-  border-color: rgba(0, 255, 136, 0.25);
+    0 0 30px rgba(37, 59, 95, 0.15);
+  border-color: rgba(37, 59, 95, 0.4);
 }
 
 /* --- Duration Badge (rotated vertically) --- */
@@ -618,8 +618,8 @@ body.scrollable .why-choose-section {
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.05em;
-  color: #080808;
-  background: var(--accent-glow);
+  color: #ffffff;
+  background: #253b5f;
   padding: 0.6rem 0.35rem;
   border-radius: 6px;
   white-space: nowrap;
@@ -643,10 +643,10 @@ body.scrollable .why-choose-section {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 255, 136, 0.08);
-  border: 1px solid rgba(0, 255, 136, 0.15);
+  background: rgba(37, 59, 95, 0.15);
+  border: 1px solid rgba(37, 59, 95, 0.3);
   border-radius: 10px;
-  color: var(--accent-glow);
+  color: #7ea8d4;
   flex-shrink: 0;
 }
 
@@ -768,5 +768,250 @@ body.scrollable .why-choose-section {
 
   .step-card {
     padding: 1.2rem 1.4rem 1.2rem 2.8rem;
+  }
+}
+
+/* ========================
+   CTA SECTION
+   ======================== */
+.cta-section {
+  position: relative;
+  z-index: 2;
+  padding: 6rem 6%;
+  background: #080808;
+}
+
+.cta-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+}
+
+.cta-left {
+  max-width: 480px;
+}
+
+.cta-tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #7ea8d4;
+  margin-bottom: 1.5rem;
+}
+
+.cta-heading {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+}
+
+.cta-highlight {
+  color: #4a7ab5;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #253b5f;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.8rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(37, 59, 95, 0.4);
+  font-family: var(--font-main);
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+  background: #1d3050;
+  box-shadow: 0 8px 30px rgba(37, 59, 95, 0.5);
+}
+
+/* --- Orbit Diagram --- */
+.cta-right {
+  flex-shrink: 0;
+}
+
+.orbit-container {
+  position: relative;
+  width: 320px;
+  height: 320px;
+}
+
+/* Concentric rings */
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(37, 59, 95, 0.3);
+}
+
+.ring-outer {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.ring-inner {
+  width: 60%;
+  height: 60%;
+  top: 20%;
+  left: 20%;
+  background: rgba(37, 59, 95, 0.06);
+}
+
+/* Center icon */
+.orbit-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: #253b5f;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 8px 30px rgba(37, 59, 95, 0.4);
+  z-index: 3;
+}
+
+/* Floating satellite nodes */
+.orbit-node {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  background: rgba(37, 59, 95, 0.2);
+  border: 1px solid rgba(37, 59, 95, 0.4);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7ea8d4;
+  z-index: 4;
+  transition: all 0.3s ease;
+}
+
+.orbit-node:hover {
+  background: #253b5f;
+  color: #ffffff;
+  transform: scale(1.15);
+  box-shadow: 0 4px 20px rgba(37, 59, 95, 0.4);
+}
+
+/* Position nodes around the orbit */
+.node-1 {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: float-y 4s ease-in-out infinite;
+}
+
+.node-2 {
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  animation: float-x 4s ease-in-out infinite 1s;
+}
+
+.node-3 {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: float-y 4s ease-in-out infinite 2s;
+}
+
+.node-4 {
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  animation: float-x 4s ease-in-out infinite 3s;
+}
+
+/* Floating labels */
+.orbit-label {
+  position: absolute;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 4;
+}
+
+.label-1 {
+  top: 8%;
+  right: 8%;
+}
+
+.label-2 {
+  bottom: 12%;
+  right: 5%;
+}
+
+/* Float animations */
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-8px);
+  }
+}
+
+@keyframes float-x {
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    transform: translateY(-50%) translateX(-8px);
+  }
+}
+
+/* CTA Responsive */
+@media (max-width: 900px) {
+  .cta-wrapper {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cta-left {
+    max-width: 100%;
+  }
+
+  .orbit-container {
+    width: 260px;
+    height: 260px;
+  }
+}
+
+@media (max-width: 600px) {
+  .cta-section {
+    padding: 4rem 4%;
+  }
+
+  .orbit-container {
+    width: 220px;
+    height: 220px;
   }
 }
