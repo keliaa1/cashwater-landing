@@ -394,7 +394,7 @@ body.scrollable .why-choose-section {
   z-index: 2;
   margin-top: 100vh;
   min-height: 100vh;
-  padding: 8rem 6% 6rem;
+  padding: 6rem 6% 6rem;
   background: linear-gradient(
     180deg,
     rgba(8, 8, 8, 0) 0%,
@@ -407,96 +407,272 @@ body.scrollable .why-choose-section {
 }
 
 .why-choose-container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
-  text-align: center;
+}
+
+/* --- Header --- */
+.why-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.why-header-left {
+  max-width: 600px;
 }
 
 .section-tag {
   display: inline-block;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   color: var(--accent-glow);
   background: rgba(0, 255, 136, 0.08);
   border: 1px solid rgba(0, 255, 136, 0.15);
-  padding: 0.4rem 1.2rem;
+  padding: 0.35rem 1rem;
   border-radius: 999px;
-  margin-bottom: 1.5rem;
-}
-
-.section-title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 900;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: var(--text-primary);
   margin-bottom: 1.2rem;
 }
 
+.section-title {
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
 .section-subtitle {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   line-height: 1.7;
   color: var(--text-secondary);
-  max-width: 600px;
-  margin: 0 auto 4rem;
+  max-width: 520px;
+  margin: 0;
 }
 
-.why-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.8rem;
+.why-header-right {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding-top: 3rem;
 }
 
-.why-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 16px;
-  padding: 2.2rem 1.8rem;
-  text-align: left;
-  backdrop-filter: blur(12px);
-  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+.date-badges {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.date-badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-secondary);
+}
+
+.date-badge.active {
+  background: var(--accent-glow);
+  border-color: var(--accent-glow);
+  color: #080808;
+}
+
+/* --- Zigzag Timeline --- */
+.timeline {
+  position: relative;
+  padding: 2rem 0 0;
+}
+
+/* Central dashed line */
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 255, 136, 0.3) 0,
+    rgba(0, 255, 136, 0.3) 8px,
+    transparent 8px,
+    transparent 18px
+  );
+}
+
+/* --- Timeline Step --- */
+.timeline-step {
+  position: relative;
+  width: 50%;
+  padding: 0 2.5rem;
+  margin-bottom: 3rem;
   opacity: 0;
   transform: translateY(40px);
+  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.why-card.visible {
+.timeline-step.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-.why-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(0, 255, 136, 0.25);
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.4),
-    0 0 40px rgba(0, 255, 136, 0.06);
+/* Connector dot on the center line */
+.timeline-step::before {
+  content: "";
+  position: absolute;
+  top: 1.5rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-glow);
+  border: 3px solid #080808;
+  z-index: 2;
 }
 
-.why-icon {
-  width: 56px;
-  height: 56px;
+/* Horizontal dashed connector from dot to card */
+.timeline-step::after {
+  content: "";
+  position: absolute;
+  top: 2rem;
+  height: 2px;
+  width: 2.5rem;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(0, 255, 136, 0.3) 0,
+    rgba(0, 255, 136, 0.3) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+/* Left step */
+.step-left {
+  margin-left: 0;
+  text-align: left;
+}
+
+.step-left::before {
+  right: -7px;
+}
+
+.step-left::after {
+  right: 0;
+}
+
+/* Right step */
+.step-right {
+  margin-left: auto;
+  text-align: left;
+}
+
+.step-right::before {
+  left: -7px;
+}
+
+.step-right::after {
+  left: 0;
+}
+
+/* --- Step Card --- */
+.step-card {
+  position: relative;
+  display: flex;
+  gap: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.6rem 1.8rem 1.6rem 3.2rem;
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.step-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(0, 255, 136, 0.06);
+  border-color: rgba(0, 255, 136, 0.25);
+}
+
+/* --- Duration Badge (rotated vertically) --- */
+.step-duration {
+  position: absolute;
+  left: -0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+}
+
+.step-duration span {
+  display: block;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #080808;
+  background: var(--accent-glow);
+  padding: 0.6rem 0.35rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* --- Step Content --- */
+.step-content {
+  flex: 1;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.step-icon {
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 255, 136, 0.06);
-  border: 1px solid rgba(0, 255, 136, 0.12);
-  border-radius: 14px;
-  margin-bottom: 1.4rem;
+  background: rgba(0, 255, 136, 0.08);
+  border: 1px solid rgba(0, 255, 136, 0.15);
+  border-radius: 10px;
+  color: var(--accent-glow);
+  flex-shrink: 0;
 }
 
-.why-card h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
+.step-header h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
   color: var(--text-primary);
-  margin-bottom: 0.7rem;
+  margin: 0;
 }
 
-.why-card p {
-  font-size: 0.88rem;
+.step-content p {
+  font-size: 0.85rem;
   line-height: 1.65;
   color: var(--text-secondary);
+  margin: 0;
+}
+
+/* keep animation hook for JS */
+.why-card {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.why-card.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Scroll indicator */
@@ -547,17 +723,50 @@ body.scrollable .why-choose-section {
 
 /* Responsive */
 @media (max-width: 900px) {
-  .why-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .timeline::before {
+    left: 1.5rem;
+  }
+
+  .timeline-step {
+    width: 100%;
+    padding-left: 4rem;
+    padding-right: 0;
+  }
+
+  .step-left,
+  .step-right {
+    margin-left: 0;
+  }
+
+  .step-left::before,
+  .step-right::before {
+    left: calc(1.5rem - 7px);
+    right: auto;
+  }
+
+  .step-left::after,
+  .step-right::after {
+    left: 1.5rem;
+    right: auto;
+    width: 2.5rem;
+  }
+
+  .why-header {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .why-header-right {
+    padding-top: 0;
   }
 }
 
 @media (max-width: 600px) {
-  .why-grid {
-    grid-template-columns: 1fr;
+  .why-choose-section {
+    padding: 4rem 4% 3rem;
   }
 
-  .why-choose-section {
-    padding: 5rem 5% 4rem;
+  .step-card {
+    padding: 1.2rem 1.4rem 1.2rem 2.8rem;
   }
 }
