@@ -167,6 +167,14 @@ window.addEventListener("resize", () => {
 });
 
 // ----------------------
+// Scroll Hint Element
+// ----------------------
+const scrollHint = document.createElement("div");
+scrollHint.className = "scroll-hint";
+scrollHint.innerHTML = `<span>Scroll to explore</span><div class="arrow"></div>`;
+document.body.appendChild(scrollHint);
+
+// ----------------------
 // Interaction (Raycaster)
 // ----------------------
 const raycaster = new THREE.Raycaster();
@@ -175,6 +183,7 @@ let isShifted = false;
 let targetX = 3.5; // Start in hero position (further right)
 let targetY = 0; // Vertical position
 let targetScale = 1.3; // Smaller for hero state
+let scrollProgress = 0; // 0 = top, 1 = fully scrolled
 
 window.addEventListener("click", (event) => {
   if (!customModel) return;
@@ -189,25 +198,77 @@ window.addEventListener("click", (event) => {
   if (intersects.length > 0) {
     isShifted = !isShifted;
     targetX = isShifted ? -8.5 : 3.5;
-    targetY = isShifted ? 1.5 : 0; // Raise model when shifted to prevent sinking
+    targetY = isShifted ? 1.5 : 0;
     targetScale = isShifted ? 2.2 : 1.3;
     document.body.classList.toggle("shifted", isShifted);
+
+    if (isShifted) {
+      // Enable scrolling
+      document.body.classList.add("scrollable");
+      scrollHint.classList.add("visible");
+      // Hide hint after a few seconds
+      setTimeout(() => scrollHint.classList.remove("visible"), 4000);
+    } else {
+      // Disable scrolling, reset to top
+      document.body.classList.remove("scrollable");
+      scrollHint.classList.remove("visible");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      scrollProgress = 0;
+    }
+  }
+});
+
+// ----------------------
+// Scroll tracking
+// ----------------------
+window.addEventListener("scroll", () => {
+  if (!isShifted) return;
+  const maxScroll = window.innerHeight; // One viewport height of scroll
+  scrollProgress = Math.min(window.scrollY / maxScroll, 1);
+
+  // Reveal "Why Choose Us" cards with stagger as user scrolls past halfway
+  if (scrollProgress > 0.3) {
+    const cards = document.querySelectorAll(".why-card");
+    cards.forEach((card, i) => {
+      setTimeout(() => card.classList.add("visible"), i * 120);
+    });
   }
 });
 
 // ----------------------
 // Animation Loop
 // ----------------------
+
+// Store initial camera Y for lerping
+const baseCameraY = camera.position.y; // 2
+
 function animate() {
   requestAnimationFrame(animate);
 
   if (customModel) {
-    // Rotate horizontally around Y axis at a slower, premium speed
-    customModel.rotation.y += 0.005;
+    // --- Scroll-driven fall animation ---
+    // Tilt the model forward (rotation.x) as it falls
+    const fallRotationX = scrollProgress * (Math.PI / 2.2); // tip forward ~82°
+    // Drop position: from targetY down to ground level
+    const groundY = -1.5; // just above ground plane
+    const fallY = isShifted
+      ? targetY + (groundY - targetY) * scrollProgress
+      : targetY;
 
-    // Smoothly lerp position towards targetX and targetY
+    // Slow down auto-rotation as model falls
+    const rotSpeed = 0.005 * (1 - scrollProgress * 0.9);
+    customModel.rotation.y += rotSpeed;
+
+    // Apply tilt (only when shifted/scrolling)
+    if (isShifted) {
+      customModel.rotation.x += (fallRotationX - customModel.rotation.x) * 0.08;
+    } else {
+      customModel.rotation.x += (0 - customModel.rotation.x) * 0.08;
+    }
+
+    // Smoothly lerp position towards target
     customModel.position.x += (targetX - customModel.position.x) * 0.06;
-    customModel.position.y += (targetY - customModel.position.y) * 0.06;
+    customModel.position.y += (fallY - customModel.position.y) * 0.06;
 
     // Smoothly lerp scale towards targetScale
     const s = customModel.scale.x + (targetScale - customModel.scale.x) * 0.06;
@@ -221,6 +282,15 @@ function animate() {
     displayLight.position.x = customModel.position.x;
     displayLight.position.y = customModel.position.y + 1;
     keyLight.position.x = customModel.position.x + 2;
+
+    // Camera adjustment — look slightly downward as model falls
+    const camY = baseCameraY - scrollProgress * 1.5;
+    camera.position.y += (camY - camera.position.y) * 0.05;
+    camera.lookAt(
+      customModel.position.x * 0.3,
+      customModel.position.y * 0.5,
+      0,
+    );
   }
 
   renderer.render(scene, camera);
