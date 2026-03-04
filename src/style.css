@@ -1,13 +1,15 @@
 :root {
-  --bg-color: #f8fafc;
-  /* Cashwater's --bg-page */
-  --text-primary: #1e293b;
-  /* Cashwater's --text-main */
-  --text-secondary: #64748b;
-  /* Cashwater's --text-muted */
+  --bg-color: #080808;
+  /* Dark scene background */
+  --text-primary: #f0f0f0;
+  /* Light text for dark bg */
+  --text-secondary: #8899aa;
+  /* Muted text for dark bg */
   --accent-color: #396cb8;
   /* Cashwater brand blue */
-  --font-main: 'Outfit', sans-serif;
+  --accent-glow: #00ff88;
+  /* Green glow accent */
+  --font-main: "Outfit", sans-serif;
 }
 
 * {
@@ -42,6 +44,7 @@ body {
   opacity: 0.7;
   transition: opacity 0.3s;
   color: var(--text-primary);
+  filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.3));
 }
 
 .cart-icon:hover {
@@ -72,7 +75,9 @@ body {
   max-width: 650px;
   position: relative;
   z-index: 60;
-  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition:
+    opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .main-title {
@@ -117,9 +122,12 @@ body {
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    background-color 0.2s,
+    box-shadow 0.2s;
   letter-spacing: 0.05em;
-  box-shadow: 0 4px 14px 0 rgba(57, 108, 184, 0.39);
+  box-shadow: 0 4px 20px 0 rgba(57, 108, 184, 0.5);
 }
 
 .btn-customize:hover {
@@ -161,26 +169,30 @@ footer {
 }
 
 .btn-sandbox {
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
   color: var(--text-primary);
-  border: 1px solid var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
+  backdrop-filter: blur(8px);
 }
 
 .btn-sandbox:hover {
-  background-color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.15);
   color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
 }
 
 canvas {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
   z-index: 1;
   outline: none;
 }
@@ -192,7 +204,7 @@ canvas {
 }
 
 /* -------------------------------
-   Interactive AirPods-Style Shift 
+   Interactive AirPods-Style Shift
    ------------------------------- */
 
 .bg-text {
@@ -202,7 +214,7 @@ canvas {
   transform: translate(-50%, -50%);
   font-size: 25vw;
   font-weight: 900;
-  color: rgba(0, 0, 0, 0.03);
+  color: rgba(255, 255, 255, 0.03);
   white-space: nowrap;
   pointer-events: none;
   z-index: 10;
@@ -219,7 +231,9 @@ canvas {
   opacity: 0;
   pointer-events: none;
   z-index: 60;
-  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition:
+    opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -245,8 +259,8 @@ canvas {
 }
 
 .manual-card {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   padding: 1.2rem;
   display: flex;
@@ -254,19 +268,20 @@ canvas {
   align-items: center;
   transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
 }
 
 .manual-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
-  border-color: var(--accent-color);
+  box-shadow: 0 12px 30px rgba(0, 255, 136, 0.1);
+  border-color: var(--accent-glow);
 }
 
 .card-image {
   width: 80px;
   height: 80px;
-  background: var(--bg-color);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -317,7 +332,7 @@ canvas {
 .btn-read-more {
   background-color: transparent;
   color: var(--text-primary);
-  border: 1px solid var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0.6rem 2rem;
   border-radius: 999px;
   font-size: 0.9rem;
@@ -327,8 +342,9 @@ canvas {
 }
 
 .btn-read-more:hover {
-  background-color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
 }
 
 /* state styles */

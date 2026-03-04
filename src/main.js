@@ -1,12 +1,15 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import './style.css';
+import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import "./style.css";
 
 // ----------------------
 // Scene
 // ----------------------
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xf8fafc); // Match --bg-color
+scene.background = new THREE.Color(0x080808); // Very dark background
+
+// Optional: add very subtle fog for depth
+scene.fog = new THREE.FogExp2(0x080808, 0.035);
 
 // ----------------------
 // Camera
@@ -17,7 +20,7 @@ const camera = new THREE.PerspectiveCamera(
   60,
   getCanvasWidth() / window.innerHeight,
   0.1,
-  1000
+  1000,
 );
 
 // Better hero angle for 360 view
@@ -29,7 +32,7 @@ camera.lookAt(0, 0, 0);
 // ----------------------
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
-  alpha: true
+  alpha: false,
 });
 
 renderer.setSize(getCanvasWidth(), window.innerHeight);
@@ -40,58 +43,74 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.2;
+renderer.toneMappingExposure = 1.0; // Slightly lower for dramatic contrast
 
-document.getElementById('app').appendChild(renderer.domElement);
+document.getElementById("app").appendChild(renderer.domElement);
 
 // ----------------------
-// Lighting
+// Lighting — Overhead Torch Spotlight Setup
 // ----------------------
-// Lower ambient to create more contrast for the directional lights
-scene.add(new THREE.AmbientLight(0xffffff, 0.3));
 
-// Soft top-down fill
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0xf8fafc, 0.6);
-hemiLight.position.set(0, 20, 0);
-scene.add(hemiLight);
+// Ambient — enough to see the model shape in the dark
+scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-// Powerful Front Key Light (Directional)
-const keyLight = new THREE.DirectionalLight(0xffffff, 2.5); // Increased intensity
-keyLight.position.set(10, 10, 10);
+// PRIMARY SPOTLIGHT — overhead torch shining down onto the model
+const spotLight = new THREE.SpotLight(0xffffff, 800);
+spotLight.position.set(3.5, 15, 2); // Above the model
+spotLight.angle = Math.PI / 5; // Wider cone to cover the whole model
+spotLight.penumbra = 0.5; // Soft edges on the light cone
+spotLight.decay = 1.2;
+spotLight.distance = 80;
+spotLight.castShadow = true;
+spotLight.shadow.mapSize.width = 4096;
+spotLight.shadow.mapSize.height = 4096;
+spotLight.shadow.bias = -0.0002;
+spotLight.shadow.camera.near = 1;
+spotLight.shadow.camera.far = 50;
+scene.add(spotLight);
+
+// Spotlight target — directly below the spotlight, follows model
+const spotTarget = new THREE.Object3D();
+spotTarget.position.set(3.5, -2, 0);
+scene.add(spotTarget);
+spotLight.target = spotTarget;
+
+// FRONT KEY LIGHT — strong directional light to illuminate the model face
+const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
+keyLight.position.set(5, 8, 10);
 keyLight.castShadow = true;
 keyLight.shadow.mapSize.set(2048, 2048);
 scene.add(keyLight);
 
-// Dramatic SpotLight for that "studio scene" feel
-const spotLight = new THREE.SpotLight(0xffffff, 80); // High intensity
-// Position it high and slightly to the right to hit the front face
-spotLight.position.set(-5, 8, 5);
-spotLight.angle = Math.PI / 6;
-spotLight.penumbra = 0.5; // Soft edges
-spotLight.decay = 2;
-spotLight.distance = 50;
-spotLight.castShadow = true;
-spotLight.shadow.mapSize.width = 1024;
-spotLight.shadow.mapSize.height = 1024;
-spotLight.shadow.bias = -0.0001;
-scene.add(spotLight);
+// Warm rim light — edge definition from behind
+const rimLight = new THREE.DirectionalLight(0xffeedd, 1.2);
+rimLight.position.set(-6, 4, -6);
+scene.add(rimLight);
 
-// The light needs a target to look at. We'll set it to look at the left side of the screen
-// where the model is roughly positioned.
-const targetObject = new THREE.Object3D();
-targetObject.position.set(-8.5, 0, 0);
-scene.add(targetObject);
-spotLight.target = targetObject;
-
-// Back Light to highlight edges and prevent flat shadowing
-const backLight = new THREE.DirectionalLight(0xffffff, 1.5);
-backLight.position.set(-10, 5, -5);
-scene.add(backLight);
-
-// Soft Side/Fill Light
-const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+// Fill light — prevents blackout on the shadow side
+const fillLight = new THREE.DirectionalLight(0xaabbcc, 0.8);
 fillLight.position.set(-5, 2, 5);
 scene.add(fillLight);
+
+// FRONT DISPLAY LIGHT — point light that follows the model to illuminate the digital display
+const displayLight = new THREE.PointLight(0xffffff, 15, 15, 1.5);
+displayLight.position.set(3.5, 1, 8); // In front of the model
+scene.add(displayLight);
+
+// ----------------------
+// Ground Plane — catches shadows and shows the spotlight cone on the floor
+// ----------------------
+const groundGeometry = new THREE.PlaneGeometry(80, 80);
+const groundMaterial = new THREE.MeshStandardMaterial({
+  color: 0x111111,
+  metalness: 0.6,
+  roughness: 0.35, // Slightly rough for a natural floor feel
+});
+const groundPlane = new THREE.Mesh(groundGeometry, groundMaterial);
+groundPlane.rotation.x = -Math.PI / 2;
+groundPlane.position.y = -2.2;
+groundPlane.receiveShadow = true;
+scene.add(groundPlane);
 
 // ----------------------
 // Model Loader
@@ -100,7 +119,7 @@ const loader = new GLTFLoader();
 let customModel;
 
 loader.load(
-  '/cashwater1.glb',
+  "/cashwater1.glb",
   (gltf) => {
     const model = gltf.scene;
 
@@ -109,7 +128,7 @@ loader.load(
     scene.add(pivot);
     pivot.add(model);
 
-    // Enable shadows
+    // Enable shadows on model meshes — keep original materials/colors
     model.traverse((node) => {
       if (node.isMesh) {
         node.castShadow = true;
@@ -133,14 +152,14 @@ loader.load(
   },
   undefined,
   (error) => {
-    console.error('Error loading model:', error);
-  }
+    console.error("Error loading model:", error);
+  },
 );
 
 // ----------------------
 // Resize
 // ----------------------
-window.addEventListener('resize', () => {
+window.addEventListener("resize", () => {
   const width = getCanvasWidth();
   camera.aspect = width / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -154,9 +173,10 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 let isShifted = false;
 let targetX = 3.5; // Start in hero position (further right)
+let targetY = 0; // Vertical position
 let targetScale = 1.3; // Smaller for hero state
 
-window.addEventListener('click', (event) => {
+window.addEventListener("click", (event) => {
   if (!customModel) return;
 
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -168,12 +188,10 @@ window.addEventListener('click', (event) => {
 
   if (intersects.length > 0) {
     isShifted = !isShifted;
-    // When shifted, move the model further to the left (target: -8.5)
-    // so it doesn't fight for space with the description on the right
-    // Increase scale for manual view (target: 2.2)
     targetX = isShifted ? -8.5 : 3.5;
+    targetY = isShifted ? 1.5 : 0; // Raise model when shifted to prevent sinking
     targetScale = isShifted ? 2.2 : 1.3;
-    document.body.classList.toggle('shifted', isShifted);
+    document.body.classList.toggle("shifted", isShifted);
   }
 });
 
@@ -183,16 +201,26 @@ window.addEventListener('click', (event) => {
 function animate() {
   requestAnimationFrame(animate);
 
-  // Rotate horizontally around Y axis at a slower, premium speed
   if (customModel) {
+    // Rotate horizontally around Y axis at a slower, premium speed
     customModel.rotation.y += 0.005;
 
-    // Smoothly lerp position towards targetX
+    // Smoothly lerp position towards targetX and targetY
     customModel.position.x += (targetX - customModel.position.x) * 0.06;
+    customModel.position.y += (targetY - customModel.position.y) * 0.06;
 
     // Smoothly lerp scale towards targetScale
     const s = customModel.scale.x + (targetScale - customModel.scale.x) * 0.06;
     customModel.scale.set(s, s, s);
+
+    // Update spotlight + target to follow model position
+    spotLight.position.x += (targetX - spotLight.position.x) * 0.06;
+    spotTarget.position.x += (targetX - spotTarget.position.x) * 0.06;
+
+    // Move front display light and key light to follow the model
+    displayLight.position.x = customModel.position.x;
+    displayLight.position.y = customModel.position.y + 1;
+    keyLight.position.x = customModel.position.x + 2;
   }
 
   renderer.render(scene, camera);
